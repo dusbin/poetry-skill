@@ -250,12 +250,22 @@ def handle_answer(user_answer: str):
         return
 
     # 解析答案
+    # 支持 A/B/C/D 或 0/1/2/3（按钮点击索引）
     ans = raw_upper
     for k in ["A", "B", "C", "D"]:
         if k == raw_upper or k in raw_upper or raw_upper in k:
             if raw_upper == k or raw_upper == f"选{k}":
                 ans = k
                 break
+    # 支持数字索引 0/1/2/3（按钮点击）
+    if ans not in ("A", "B", "C", "D"):
+        try:
+            idx = int(raw_upper)
+            keys = ["A", "B", "C", "D"]
+            if 0 <= idx < len(keys):
+                ans = keys[idx]
+        except ValueError:
+            pass
 
     if ans not in ("A", "B", "C", "D"):
         output_json(poem_name, state)
